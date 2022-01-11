@@ -1,0 +1,14 @@
+{
+    "name": "liuyu/swoole-demo",
+    "description": "learning swoole",
+    "authors": [
+        {
+            "name": "liuyu",
+            "email": "liuy@ggxx.net"
+        }
+    ],
+    "require": {
+        "myclabs/php-enum": "^1.8",
+        "ext-json": "*"
+    }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>swoole demo private channel</title>
+    <!-- 引入jQuery工具 -->
+    <script src="./js/jquery.min.js"></script>
+    <!-- 引入laravel-echo工具，其实使用Larave自带的也可以。但是，使用自带的还需要用到node前端构建工具，我这里只简单的演示后端实现过程，就不用node了 -->
+    <script src="./js/echo.iife.js"></script>
+    <!-- 引入pusher工具，pusher是Laravel-echo底层，Laravel-echo是pusher的一层封装 -->
+    <script src="./js/pusher.js"></script>
+</head>
+<body>
+<h1>swoole demo private channel</h1>
+<button id="private">sent to private channel</button>
+</body>
+<script type="text/javascript">
+
+  // 简单模拟一个 uuid 唯一身份码，为了后端广播时，不会广播给错人
+  // var uuid = Math.round(Math.random() * 1000000);
+
+  var gid = 1;
+
+  if (location.hostname === 'sapi.020richang.com') {
+    gid = 25;
+  }
+  var uid = 1;
+  var sub_uid = 1;
+  var access_token = '161d653f5ae7dd';
+  var channel_name = 'user.' + uid;
+
+  // 初始化 laravel-echo 插件
+  window.Echo = new Echo({
+    // 这里是固定值 pusher
+    broadcaster: 'pusher',
+    // 这里要和你在 .env 中配置的 PUSHER_APP_KEY 保持一致
+    key: 'api-pusher-app-key',
+    // wsHost: location.hostname,
+    wsHost: 'swoole-demo.local',
+    // wsPath: '/api',
+    // 这里是我们在上一步启动 socket 监听的端口
+    wsPort: 9503,
+    // 这个也要加上
+    forceTLS: false,
+    authEndpoint: 'http://api.cps.ggxx.local/broadcasting/auth',
+    auth: {
+      params: {
+        uid: uid,
+        access_token: access_token,
+      },
+    },
+  });
+
+  Echo.private(channel_name)
+    .listen('.privateEvent', (e) => {
+      console.log('received ', e);
+    }).listen('.user.banned', (e) => {
+      alert('received event .user.banned');
+      console.log(e);
+    }).listen('.user.play.timeout', (e) => {
+      alert('received event .user.play.timeout');
+      console.log(e);
+    });
+
+  var cycleEventData = {
+    cycle_time: 60,
+    uid: uid,
+    sub_uid: sub_uid,
+    gid: gid,
+  };
+
+  cycleEventData = JSON.stringify(cycleEventData);
+
+  // 我们在这里放置一个定时器，每三秒钟向服务器发送一条数据
+  setInterval(function(){
+    // 这里新增一个向服务端发送消息的方法
+    // 第一个参数是事件名，这个可以随意写，不需要与 Laravel 中做对应
+    // 第二个参数是具体数据，这个就更随意了
+    Echo.connector.pusher.send_event('client-cycle.playing', cycleEventData, channel_name);
+  }, 3000);
+
+
+  $('#private').click(function() {
+    $.ajax({
+      url: 'sent-private-channel',
+      data: {uuid: uuid},
+      success: function(e) {
+        console.log(e);
+      }
+    })
+  });
+</script>
+</html>
