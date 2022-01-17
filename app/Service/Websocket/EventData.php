@@ -5,12 +5,20 @@ use App\Enum\EventName;
 
 class EventData
 {
-    public static function established($socketId)
+    /**
+     * @param $socketId
+     * @param $fd int websocket 客户端唯一标识
+     * @return string
+     */
+    public static function established($socketId, $fd)
     {
         $data = [
             'socket_id' => $socketId,
             'activity_timeout' => 30,
         ];
+
+        $clientSocket = new ClientSocket();
+        $clientSocket->putFd($socketId, $fd);
 
         return static::build(EventName::Established(), $data);
     }

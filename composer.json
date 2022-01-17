@@ -9,6 +9,12 @@
     ],
     "require": {
         "myclabs/php-enum": "^1.8",
-        "ext-json": "*"
+        "ext-json": "*",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
     }
 }
