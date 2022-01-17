@@ -31,7 +31,7 @@
   $.ajax({
       url: 'http://api.cps.ggxx.local/user/login-by-name',
       data: {
-          name:'gametest',
+          name:'minor01', // gametest
           password:123456,
           gid:1,
           lid:1,
@@ -54,6 +54,7 @@
       console.log(data);
       uid = data.uid;
       access_token = data.access_token;
+      channel_name = 'user.' + uid;
 
       // 初始化 laravel-echo 插件
       window.Echo = new Echo({

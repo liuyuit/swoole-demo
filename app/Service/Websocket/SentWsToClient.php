@@ -25,6 +25,9 @@ class SentWsToClient
 
     public function push($redisInstance, $channelName, $message) {
         $fd = $this->getFd($message);
+        if (!$fd) {
+            return;
+        }
         echo sprintf("sent message to fd: %d : %s\n", $fd, $message);
         $this->websocket->push($fd, $message);
     }
