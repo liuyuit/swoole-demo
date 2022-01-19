@@ -123,7 +123,7 @@
           .listen('.privateEvent', (e) => {
               console.log('received ', e);
           }).listen('.user.banned', (e) => {
-          alert('received event .user.banned');
+          alert('received event .user.banned' + ' 防沉迷踢下线');
           console.log(e);
       }).listen('.user.play.timeout', (e) => {
           alert('received event .user.play.timeout');
