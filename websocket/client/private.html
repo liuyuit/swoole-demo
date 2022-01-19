@@ -19,25 +19,36 @@
   // var uuid = Math.round(Math.random() * 1000000);
 
   var gid = 1;
-
   if (location.hostname === 'sapi.020richang.com') {
     gid = 25;
   }
-  var uid = 1;
-  var sub_uid = 1;
-  var access_token = '161d653f5ae7dd';
-  var channel_name = 'user.' + uid;
+  var apiUrl;
+  if (location.hostname === 'swoole-demo.local') {
+      apiUrl = 'http://api.cps.ggxx.local'; // 本地环境
+  }  else {
+      apiUrl = 'http://apisdk.020richang.com' // 线上环境
+  }
+
+  var lid = 1;
+  var equipment_id = 865736036464728;
+  var equipment_idfv = 865736036464728;
+  var platform = 1;
+  var uid;
+  var sub_uid;
+  var access_token;
+  var channel_name;
 
   $.ajax({
-      url: 'http://api.cps.ggxx.local/user/login-by-name',
+      url:  apiUrl + '/user/login-by-name',
       data: {
-          name:'minor01', // gametest
+          name:'minor01',
+          // name:'gametest',
           password:123456,
-          gid:1,
-          lid:1,
-          equipment_id:865736036464728,
-          equipment_idfv:865736036464728,
-          platform:1,
+          gid:gid,
+          lid:lid,
+          equipment_id:equipment_id,
+          equipment_idfv:equipment_idfv,
+          platform:platform,
           rest:{"ip":"127.0.1.1","phone":"mi"},
       },
       dataType: 'jsonp',
@@ -56,6 +67,36 @@
       access_token = data.access_token;
       channel_name = 'user.' + uid;
 
+      return new Promise(function(res, ret) {
+          $.ajax({
+              url: apiUrl + '/user/login',
+              data: {
+                access_token: access_token,
+                uid: uid,
+                // sub_uid: sub_uid,
+                gid:gid,
+                lid:lid,
+                equipment_id:equipment_id,
+                equipment_idfv:equipment_idfv,
+                platform:platform,
+                rest: {"ip":"127.0.1.1","phone":"mi"},
+              },
+              dataType: 'jsonp',
+              success: (responseData) => {
+                  if (responseData.code !== 0) {
+                      console.log(responseData.msg);
+                      ret();
+                      return false;
+                  }
+                  res(responseData.data);
+              },
+          });
+      });
+  }, () => {
+      console.log('get token by name failed');
+  }).then((data) => {
+      console.log(data);
+      sub_uid = data.sub_uid;
       // 初始化 laravel-echo 插件
       window.Echo = new Echo({
           // 这里是固定值 pusher
