@@ -18,8 +18,16 @@
   // var uuid = Math.round(Math.random() * 1000000);
   let echoClients = [];
 
-  for (let i = 1; i < 10; i++) {
-      let userName = 'minor0' + i;
+  for (let i = 1; i < 1000; i++) {
+      let userName;
+      if (i < 10) {
+          userName = 'test000' + i
+      } else if(i < 100) {
+          userName = 'test00' + i
+      } else if (i < 1000) {
+          userName = 'test0' + i
+      }
+
       let gid = 1;
       if (location.hostname === 'sapi.020richang.com') {
           gid = 25;
