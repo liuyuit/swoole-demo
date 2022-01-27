@@ -5,6 +5,7 @@ use App\Service\Websocket\SentWsToClient;
 use App\Service\Websocket\Store;
 use Swoole\WebSocket\Server;
 
+ini_set('memory_limit', '2048M');
 $ws = new Server('0.0.0.0', 9503);
 
 $ws->on('Open', function ($ws, $request){
@@ -35,6 +36,7 @@ $ws->on('Close', function ($ws, $fd){
 });
 
 $ws->on("WorkerStart", function (Server $ws, int $workerId) {
+    // todo 这个回调函数执行了四次，会导致重复处理消息
     echo "on WorkerStart \n";
     $sentWs = new SentWsToClient();
     $sentWs->sent($ws);
