@@ -9,8 +9,8 @@ if (!function_exists('getRedisClient')) {
     {
         $redis = new \Redis();
         $redis->connect($_ENV['REDIS_IP'], $_ENV['REDIS_PORT']);
-        $redis->select($_ENV['REDIS_DB']);
         $redis->auth($_ENV['REDIS_PASSWORD']);
+        $redis->select($_ENV['REDIS_DB']);
         return $redis;
     }
 }
