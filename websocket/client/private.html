@@ -107,10 +107,10 @@
           wsHost: 'swoole-demo.local',
           // wsPath: '/api',
           // 这里是我们在上一步启动 socket 监听的端口
-          wsPort: 9503,
+          wsPort: 6001,
           // 这个也要加上
           forceTLS: false,
-          authEndpoint: 'http://api.cps.ggxx.local/broadcasting/auth',
+          authEndpoint: apiUrl + '/broadcasting/auth',
           auth: {
               params: {
                   uid: uid,
