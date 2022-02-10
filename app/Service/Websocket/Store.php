@@ -9,6 +9,6 @@ class Store
     public function cache($messageData)
     {
         $redis = getRedisClient();
-        $redis->publish($this->messageRedisKey, $messageData);
+        $redis->lpush($this->messageRedisKey, $messageData);
     }
 }

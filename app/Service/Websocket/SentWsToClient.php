@@ -20,10 +20,17 @@ class SentWsToClient
         $redis = getRedisClient();
         echo "prepare to sent ws message to client\n";
         $redis->setOption(Redis::OPT_READ_TIMEOUT, -1);
-        $redis->subscribe([$this->messageRedisKey], [$this, 'push']);
+        while (true) {
+            $message = $redis->rPop($this->messageRedisKey);
+            if (!$message) {
+                continue;
+            }
+
+            $this->pushToWsClient($message);
+        }
     }
 
-    public function push($redisInstance, $channelName, $message) {
+    public function pushToWsClient($message) {
         $fd = $this->getFd($message);
         if (!$fd) {
             return;
