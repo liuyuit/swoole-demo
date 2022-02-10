@@ -36,7 +36,6 @@ $ws->on('Close', function ($ws, $fd){
 });
 
 $ws->on("WorkerStart", function (Server $ws, int $workerId) {
-    // todo 这个回调函数执行了四次，会导致重复处理消息
     echo "on WorkerStart \n";
     $sentWs = new SentWsToClient();
     $sentWs->sent($ws);
