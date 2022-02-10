@@ -6,7 +6,7 @@ use App\Service\Websocket\Store;
 use Swoole\WebSocket\Server;
 
 ini_set('memory_limit', '2048M');
-$ws = new Server('0.0.0.0', 9503);
+$ws = new Server('0.0.0.0', 6001);
 
 $ws->on('Open', function ($ws, $request){
     $socketId = random_int(100000000, 999999999) . '.' . random_int(10000000, 99999999);
