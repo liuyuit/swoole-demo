@@ -21,14 +21,24 @@ $ws->on('Message', function ($ws, $frame) {
     $message = json_decode($frame->data, true);
     switch ($message['event']) {
         case 'pusher:ping': // 心跳消息
-            $ws->push($frame->fd, json_encode([
+            $result = $ws->push($frame->fd, json_encode([
                 'event' => 'pusher:pong',
             ]));
+            if ($result) {
+                echo sprintf("sent message to fd: %d : %s\n", $frame->fd, 'pusher:pong');
+            } else {
+                echo sprintf("sent message to fd: %d : %s failed \n", $frame->fd, 'pusher:pong');
+            }
             break;
         case 'pusher:subscribe': // 订阅消息，收到订阅消息后需要回传一个消息给安卓客户端，然后客户端才会修改状态为订阅成功
-            $ws->push($frame->fd, json_encode([
+            $result = $ws->push($frame->fd, json_encode([
                 'event' => 'pusher_internal:subscription_succeeded',
             ]));
+            if ($result) {
+                echo sprintf("sent message to fd: %d : %s\n", $frame->fd, 'pusher_internal:subscription_succeeded');
+            } else {
+                echo sprintf("sent message to fd: %d : %s failed\n", $frame->fd, 'pusher_internal:subscription_succeeded');
+            }
             break;
         default:
             $store = new Store();
