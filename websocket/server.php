@@ -25,6 +25,11 @@ $ws->on('Message', function ($ws, $frame) {
                 'event' => 'pusher:pong',
             ]));
             break;
+        case 'pusher:subscribe': // 订阅消息，收到订阅消息后需要回传一个消息给安卓客户端，然后客户端才会修改状态为订阅成功
+            $ws->push($frame->fd, json_encode([
+                'event' => 'pusher:subscribed',
+            ]));
+            break;
         default:
             $store = new Store();
             $store->cache($frame->data);
