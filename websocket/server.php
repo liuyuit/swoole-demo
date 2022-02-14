@@ -35,6 +35,7 @@ $ws->on('Message', function ($ws, $frame) {
         case 'pusher:subscribe': // 订阅消息，收到订阅消息后需要回传一个消息给安卓客户端，然后客户端才会修改状态为订阅成功
             $result = $ws->push($frame->fd, json_encode([
                 'event' => 'pusher_internal:subscription_succeeded',
+                'channel' => $message['data']['channel'],
                 'data' => [],
             ]));
             if ($result) {
