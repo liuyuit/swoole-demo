@@ -31,12 +31,18 @@ class SentWsToClient
     }
 
     public function pushToWsClient($message) {
+        $date = date('Y-m-d H:i:s');
+
         $fd = $this->getFd($message);
         if (!$fd) {
             return;
         }
-        echo sprintf("sent message to fd: %d : %s\n", $fd, $message);
-        $this->websocket->push($fd, $message);
+        $result = $this->websocket->push($fd, $message);
+        if ($result) {
+            echo sprintf("[%s]sent message to fd: %d : %s\n", $date, $fd, $message);
+        } else {
+            echo sprintf("[%s]sent message to fd: %d : %s failed !\n", $date, $fd, $message);
+        }
     }
 
     protected function getFd($message)

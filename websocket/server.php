@@ -16,28 +16,31 @@ $ws->on('Open', function ($ws, $request){
 });
 
 $ws->on('Message', function ($ws, $frame) {
-    echo "fd {$frame->fd} received message: {$frame->data}\n";
+    $date = date('Y-m-d H:i:s');
+    echo "[{$date}]fd {$frame->fd} received message: {$frame->data}\n";
 
     $message = json_decode($frame->data, true);
     switch ($message['event']) {
         case 'pusher:ping': // 心跳消息
             $result = $ws->push($frame->fd, json_encode([
                 'event' => 'pusher:pong',
+                'data' => [],
             ]));
             if ($result) {
-                echo sprintf("sent message to fd: %d : %s\n", $frame->fd, 'pusher:pong');
+                echo sprintf("[%s]sent message to fd: %d : %s\n", $date, $frame->fd, 'pusher:pong');
             } else {
-                echo sprintf("sent message to fd: %d : %s failed \n", $frame->fd, 'pusher:pong');
+                echo sprintf("[%s]sent message to fd: %d : %s failed \n", $date, $frame->fd, 'pusher:pong');
             }
             break;
         case 'pusher:subscribe': // 订阅消息，收到订阅消息后需要回传一个消息给安卓客户端，然后客户端才会修改状态为订阅成功
             $result = $ws->push($frame->fd, json_encode([
                 'event' => 'pusher_internal:subscription_succeeded',
+                'data' => [],
             ]));
             if ($result) {
-                echo sprintf("sent message to fd: %d : %s\n", $frame->fd, 'pusher_internal:subscription_succeeded');
+                echo sprintf("[%s]sent message to fd: %d : %s\n", $date, $frame->fd, 'pusher_internal:subscription_succeeded');
             } else {
-                echo sprintf("sent message to fd: %d : %s failed\n", $frame->fd, 'pusher_internal:subscription_succeeded');
+                echo sprintf("[%s]sent message to fd: %d : %s failed\n", $date, $frame->fd, 'pusher_internal:subscription_succeeded');
             }
             break;
         default:
