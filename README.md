@@ -23,3 +23,4 @@ vim .env
 php websocket/server.php
 ```
 
+测试页面地址 `http://swoole-demo.local/websocket/client/private.html`
