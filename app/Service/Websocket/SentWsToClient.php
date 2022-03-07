@@ -23,6 +23,7 @@ class SentWsToClient
         while (true) {
             $message = $redis->rPop($this->messageRedisKey);
             if (!$message) {
+                usleep(100000);
                 continue;
             }
 
